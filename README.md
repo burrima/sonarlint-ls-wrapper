@@ -1,5 +1,5 @@
 # sonarlint-ls-wrapper
-Connect sonarlint language-server to Vim-ALE
+Prototype to connect sonarlint language-server to Vim-ALE
 
 ## Introduction
 
