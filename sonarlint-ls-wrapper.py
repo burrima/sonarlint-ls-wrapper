@@ -71,6 +71,8 @@ def print_log(message, overwrite=False):
     @param message [string] or [binary string] with the message to be logged
     @param overwrite [boolean] overwrite existing file if true
     """
+    if LOGFILE is None:
+        return
     mode = "w" if overwrite else "a"
     with open(LOGFILE, mode) as f:
         f.write(f"{datetime.datetime.now()}: {message}\n")
