@@ -1,0 +1,55 @@
+let s:sonarlint_wrapper_executable = '/opt/sonarlint-ls-wrapper.py'
+
+let s:base_config = {
+\   'settings': {
+\       'sonarlint': {
+\           'rules': {},
+\           'connectedMode': {
+\               'servers': [],
+\               'connections': {'sonarqube': [], 'sonarcloud': []},
+\               'project': {}
+\           },
+\           'pathToNodeExecutable': '',
+\           'testFilePattern': '',
+\           'ls': { 'javaHome': '', 'vmargs': '' },
+\           'output': {
+\               'showVerboseLogs': v:false,
+\               'showAnalyzerLogs': v:false
+\           },
+\           'analyzerProperties': {},
+\           'trace': { 'server':'off' },
+\           'disableTelemetry': v:true
+\       }
+\   }
+\}
+
+function! s:ConfigCallbackForC(buffer) abort
+    let [l:root, l:compile_commands] = ale#c#FindCompileCommands(a:buffer)
+    let l:config = copy(s:base_config)
+    let l:config['settings']['sonarlint']['pathToCompileCommands'] = l:compile_commands
+
+    return l:config
+endfunction
+
+autocmd VimEnter * call ale#linter#Define('cpp', {
+\   'name': 'sonarlint',
+\   'lsp': 'stdio',
+\   'executable': s:sonarlint_wrapper_executable,
+\   'command': '%e run',
+\   'project_root': function('ale#c#FindProjectRoot'),
+\   'lsp_config': function('s:ConfigCallbackForC'),
+\})
+
+autocmd VimEnter * call ale#linter#Define('python', {
+\   'name': 'sonarlint',
+\   'lsp': 'stdio',
+\   'executable': s:sonarlint_wrapper_executable,
+\   'command': '%e run',
+\   'project_root': function('ale#python#FindProjectRoot'),
+\   'lsp_config': s:base_config,
+\})
+
+let g:ale_linters = {
+\   'cpp': ['all'],
+\   'python': ['flake8', 'mypy', 'pylint', 'pyright', 'sonarlint'],
+\}
