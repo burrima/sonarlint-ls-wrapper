@@ -45,7 +45,7 @@ Terminology used in this script
   * object: message binary-decoded and parsed from JSON into a python object
 """
 
-LOGFILE = None  # "/tmp/sonar-ls-wrapper.log"
+LOGFILE = None  # e.g. "/tmp/sonarlint-ls-wrapper.log"
 PORT = random.randrange(5000, 65535)
 SONARLINT_PATH = (
     "<path-to-sonarlint-jars>")  # TODO: provide correct path
@@ -62,6 +62,7 @@ SONARLINT_START_CMD = (
     f" {SONARLINT_PATH}/analyzers/sonarcfamily.jar"
     f" -extraAnalyzers {SONARLINT_PATH}/analyzers/sonarsecrets.jar")
 BUFSIZE = 4096
+VERSION = "0.1.0"
 
 
 def print_log(message, overwrite=False):
@@ -313,7 +314,7 @@ class SonarlintSocket(threading.Thread):
 
 
 if __name__ == "__main__":
-    print_log("Started...", overwrite=True)
+    print_log(f"Started version {VERSION}...", overwrite=True)
 
     sonarlintSocket = SonarlintSocket(("localhost", PORT))
     sonarlintSocket.start()
